@@ -82,11 +82,12 @@ public class Main
 	 */
 	public static void printConfirmation(int numTacos)
 	{
-		System.out.println("Here you go, buen provecho!");
-		for (int i = 0; i < numTacos; i++)
-		{
-			System.out.print("🌮");
-		}
-		System.out.println(); // Move to next line after printing tacos
+	System.out.println("Here you go, buen provecho!");
+	for (int i = 0; i < numTacos; i++)
+	{
+		System.out.print("🌮");
+	}
+	System.out.println(); // <--- THIS ensures the next output starts on a new line
+	System.out.println(); 
 	}
 }
