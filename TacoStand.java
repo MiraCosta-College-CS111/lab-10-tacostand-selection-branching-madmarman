@@ -2,6 +2,11 @@ public class TacoStand
 {
     /* CONSTANT VARIABLES */
 	public static final String BAR = "----------------------------------------";
+	public static final double ASADA_PRICE = 2.50;
+    public static final double POLLO_PRICE = 1.75;
+    public static final double LENGUA_PRICE = 3.00;
+    public static final double ULTIMATE_PRICE = 18.00;
+    public static final double SUPPLY_COST_PER_TACO = 0.75;
 
 	/* STATIC VARIABLES */
 	private static int numAsada = 0, numPollo = 0, numLengua = 0, numUltimate = 0;
@@ -22,10 +27,10 @@ public class TacoStand
 	public static void printMenu()
 	{
 		System.out.println("Menu options:\n" + TacoStand.BAR);
-		System.out.printf("%2d. %-21s [$%5.2f]%n", 1, "Carne Asada (Steak)", 2.5);
-		System.out.printf("%2d. %-21s [$%5.2f]%n", 2, "Pollo Asado (Chicken)", 1.75);
-		System.out.printf("%2d. %-21s [$%5.2f]%n", 3, "Lengua (Beef Tongue)", 3.0);
-		System.out.printf("%2d. %-21s [$%5.2f]%n", 4, "Ultimate Taco", 18.0);
+		System.out.printf("%2d. %-21s [$%5.2f]%n", 1, "Carne Asada (Steak)", ASADA_PRICE);
+		System.out.printf("%2d. %-21s [$%5.2f]%n", 2, "Pollo Asado (Chicken)", POLLO_PRICE);
+		System.out.printf("%2d. %-21s [$%5.2f]%n", 3, "Lengua (Beef Tongue)", LENGUA_PRICE);
+		System.out.printf("%2d. %-21s [$%5.2f]%n", 4, "Ultimate Taco", ULTIMATE_PRICE);
 		System.out.println(TacoStand.BAR);
 	}
 	
@@ -43,11 +48,11 @@ public class TacoStand
 			"%-23s%2d tacos%n" +
 			"%-23s%2d tacos%n%s",
 			TacoStand.BAR, TacoStand.BAR, 
-      "Funds Available:", TacoStand.totalFunds, TacoStand.BAR,
-      "# of Asada Left:", TacoStand.numAsada,
+      		"Funds Available:", TacoStand.totalFunds, TacoStand.BAR,
+      		"# of Asada Left:", TacoStand.numAsada,
 			"# of Pollo Left:", TacoStand.numPollo,
-      "# of Lengua Left:", TacoStand.numLengua,
-      "# of Ultimate Left:",TacoStand.numUltimate, TacoStand.BAR);
+     		"# of Lengua Left:", TacoStand.numLengua,
+     		 "# of Ultimate Left:",TacoStand.numUltimate, TacoStand.BAR);
 	}
 
 	/**
@@ -72,17 +77,20 @@ public class TacoStand
 	public static boolean orderSupplies(double budget)
 	{
 		//tacos cost 75 cents each in supplies, keeping it simple
-	    int tacosEach = (int)(Math.round(budget / 0.75 / 4));
+	    if (budget <= totalFunds && budget > 0) {
+            int tacosEach = (int)(Math.round(budget / SUPPLY_COST_PER_TACO / 4));
 
-	    TacoStand.totalFunds -= budget;
+	   		TacoStand.numAsada += tacosEach;
+	    	TacoStand.numPollo += tacosEach;
+	    	TacoStand.numLengua += tacosEach;
+	    	TacoStand.numUltimate += tacosEach;
 
-	    TacoStand.numAsada += tacosEach;
-	    TacoStand.numPollo += tacosEach;
-	    TacoStand.numLengua += tacosEach;
-	    TacoStand.numUltimate += tacosEach;
-
-		return true;  //TODO: this is stubbed, replace this line with your actual code!
-	}
+		   TacoStand.totalFunds -= budget;
+            return true;
+        } else {
+            return false;
+        }
+    }
 
 	/**
 	 * Adds funds to total (static variable) based on kind of taco (different prices) and number of tacos
@@ -93,8 +101,30 @@ public class TacoStand
 	 */
 	public static void updateTotalFunds(int tacoOption, int numTacos)
 	{
-		//TODO: this is stubbed, replace this line with your actual code!
-	}
+		if (!areTacosAvailable(tacoOption, numTacos)) {
+            System.out.println("We don't have that many tacos, sorry! Try again :(");
+            return;
+        }
+
+        switch (tacoOption) {
+            case 1:
+                totalFunds += ASADA_PRICE * numTacos;
+                numAsada -= numTacos;
+                break;
+            case 2:
+                totalFunds += POLLO_PRICE * numTacos;
+                numPollo -= numTacos;
+                break;
+            case 3:
+                totalFunds += LENGUA_PRICE * numTacos;
+                numLengua -= numTacos;
+                break;
+            case 4:
+                totalFunds += ULTIMATE_PRICE * numTacos;
+                numUltimate -= numTacos;
+                break;
+        }
+    }
 	
 	
 	/**
@@ -106,7 +136,13 @@ public class TacoStand
 	 * @return boolean representing if specific kind of tacos, for the number in order, are available
 	 */
 	public static boolean areTacosAvailable(int tacoOption, int numTacos)
-	{
-		return false; //TODO: this is stubbed, replace this line with your actual code!
-	}
+    {
+        switch (tacoOption) {
+            case 1: return numTacos <= numAsada;
+            case 2: return numTacos <= numPollo;
+            case 3: return numTacos <= numLengua;
+            case 4: return numTacos <= numUltimate;
+            default: return false;
+        }
+    }
 }
